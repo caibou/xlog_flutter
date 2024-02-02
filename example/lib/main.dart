@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:xlog_flutter/export.dart';
+import 'dart:async';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +16,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _xlogFlutterPlugin = XlogFlutter();
+  int number = 0;
+  var logFolderPath = "";
+  var logFilePath = "";
 
   @override
   void initState() {
@@ -32,23 +32,53 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     XlogFlutter.print(tag: 'MAIN', message: '测试');
 
-    for (int i = 0; i < 100; i++) { 
+    for (int i = 0; i < 100; i++) {
       XlogFlutter.print(tag: 'MAIN', message: '测试---- $i');
     }
-    
+
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+          appBar: AppBar(
+            title: Text('Plugin example app ${number}'),
+          ),
+          body: Center(
+              child: Column(children: [
+            Text("current Number : $number"),
+            Text("current logFolderPath : $logFolderPath"),
+            Text("current logFilePath : $logFilePath"),
+            ElevatedButton(
+                onPressed: () {
+                  number += 1;
+                  XlogFlutter.print(message: "input content number:${number}");
+                  setState(() {});
+                },
+                child: const Text("test Log")),
+            ElevatedButton(
+                onPressed: () {
+                  XlogFlutter.flush();
+                },
+                child: const Text("flush Log")),
+            ElevatedButton(
+                onPressed: () {
+                  XlogFlutter.getLogFolderPath().then((result) {
+                    logFolderPath = result;
+                    setState(() {});
+                  });
+                },
+                child: const Text("getLogFilePath")),
+            ElevatedButton(
+                onPressed: () {
+                  XlogFlutter.getLogFilePath().then((result) {
+                    logFilePath = result;
+                    setState(() {});
+                  });
+                },
+                child: const Text("getLogFilePath")),
+          ]))),
     );
   }
 }
