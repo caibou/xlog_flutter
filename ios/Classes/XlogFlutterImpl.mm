@@ -9,6 +9,8 @@
 #import <mars/xlog/appender.h>
 #import <mars/xlog/xloggerbase.h>
 
+using namespace mars::xlog;
+
 @interface XlogFlutterImpl()
 
 @end
@@ -51,7 +53,18 @@
     }
     
     appender_set_max_file_size(logMaxSize);
-    appender_open(kAppednerAsync, [[[self class] logFolderPath] UTF8String], [logFileName UTF8String], "");
+    
+    XLogConfig config;
+    config.mode_ = kAppenderAsync;
+    config.logdir_ = [[[self class] logFolderPath] UTF8String];
+    config.nameprefix_ = [logFileName UTF8String];
+    config.pub_key_ = "";
+    config.compress_mode_ = kZlib;
+    config.compress_level_ = 0;
+    config.cachedir_ = "";
+    config.cache_days_ = 0;
+    appender_open(config);
+    
     if(completion) {
         completion(nil);
     }
@@ -230,17 +243,26 @@
     
     for (NSString *logFile in logFiles) {
         NSString *logFilePath = [logFolder stringByAppendingPathComponent:logFile];
-        NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:logFilePath 
-                                                                                  error:&error];
-        if (fileAttr) {
-            NSDate *creationDate = [fileAttr valueForKey:NSFileCreationDate];
-            if ([creationDate compare:date] == NSOrderedAscending) {
-                NSLog(@"[Kiwi:LogExt] cleanLogFiles: %@ will be deleted", logFile);
-                [[NSFileManager defaultManager] removeItemAtPath:logFilePath error:&error];
-                NSLog(@"[Kiwi:LogExt] cleanLogFiles: %@ was deleted, error number is %ld", logFilePath, (long)error.code);
+        if ([[logFilePath pathExtension] isEqualToString:@"xlog"]) {
+
+            NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:logFilePath 
+                error:&error];
+
+            if (fileAttr) {
+                NSDate *creationDate = [fileAttr valueForKey:NSFileCreationDate];
+                if ([creationDate compare:date] == NSOrderedAscending) {
+                    NSLog(@"[Kiwi:LogExt] cleanLogFiles: %@ will be deleted", logFile);
+                    [[NSFileManager defaultManager] removeItemAtPath:logFilePath error:&error];
+                    NSLog(@"[Kiwi:LogExt] cleanLogFiles: %@ was deleted, error number is %ld", logFilePath, (long)error.code);
+                }
             }
         }
     }
+}
+
+#pragma mark -FlutterApplicationLifeCycleDelegate
+- (void)applicationWillTerminate:(UIApplication *)application {
+    appender_close();
 }
 
 @end

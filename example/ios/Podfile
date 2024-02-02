@@ -29,9 +29,6 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-
-  pod 'dymars', :git => 'ssh://git@niubigit.caijiyouxi.com:2022/caiji-ios/dymars.git'
-
 end
 
 post_install do |installer|
