@@ -1,0 +1,4 @@
+-keep class com.tencent.mars.xlog.** { *; }
+-keep class com.tencent.mars.comm.* { *; }
+-keep class com.tencent.mars.app.* { *; }
+-keep class com.tencent.mars.stn.* {*;}
