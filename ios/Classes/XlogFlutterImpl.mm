@@ -64,6 +64,9 @@
 - (void)printTag:(nonnull NSString *)tag
            level:(LogLevel)level
          message:(nonnull NSString *)message
+        fileName:(NSString *)fileName
+        funcName:(NSString *)funcName
+      lineNumber:(NSInteger)lineNumber
       completion:(nonnull void (^)(FlutterError * _Nullable))completion {
     
     struct timeval time;
@@ -73,7 +76,10 @@
         [self writeLogWithLevel:level 
                      moduleName:tag
                         message:message
-                           time:time 
+                       fileName:fileName
+                       funcName:funcName
+                     lineNumber:(int)lineNumber
+                           time:time
                             tid:tid];
     });
     
@@ -96,13 +102,19 @@
 - (void)writeLogWithLevel:(LogLevel)logLevel
                moduleName:(NSString *)moduleName
                   message:(NSString *)message
-                     time:(struct timeval)time 
+                 fileName:(NSString *)fileName
+                 funcName:(NSString *)funcName
+               lineNumber:(int)lineNumber
+                     time:(struct timeval)time
                       tid:(uintptr_t)tid {
-    NSString *tag = [NSString stringWithFormat:@"<%@>%@", [[self class] getTagDescByLogLevel:logLevel], moduleName ? [NSString stringWithFormat:@"<%@>", moduleName] : @""];
+    NSString *tag = [NSString stringWithFormat:@"<%@>%@", [[self class] getTagDescByLogLevel:logLevel], (moduleName && moduleName.length) ? [NSString stringWithFormat:@"<%@>", moduleName] : @""];
     
     XLoggerInfo info;
     info.level = (TLogLevel)logLevel;
     info.tag = tag.UTF8String;
+    info.filename = (fileName && fileName.length) ? fileName.UTF8String : NULL;
+    info.func_name = (funcName && funcName.length) ? funcName.UTF8String : NULL;
+    info.line = lineNumber;
     info.timeval = time;
     info.tid = tid;
     info.maintid = (uintptr_t)[NSThread mainThread];

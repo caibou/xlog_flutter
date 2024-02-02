@@ -82,13 +82,16 @@ void SetUpXlogFlutterApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<Xl
         binaryMessenger:binaryMessenger
         codec:XlogFlutterApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(printTag:level:message:completion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(printTag:level:message:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(printTag:level:message:fileName:funcName:lineNumber:completion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(printTag:level:message:fileName:funcName:lineNumber:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_tag = GetNullableObjectAtIndex(args, 0);
         LogLevel arg_level = [GetNullableObjectAtIndex(args, 1) integerValue];
         NSString *arg_message = GetNullableObjectAtIndex(args, 2);
-        [api printTag:arg_tag level:arg_level message:arg_message completion:^(FlutterError *_Nullable error) {
+        NSString *arg_fileName = GetNullableObjectAtIndex(args, 3);
+        NSString *arg_funcName = GetNullableObjectAtIndex(args, 4);
+        NSInteger arg_lineNumber = [GetNullableObjectAtIndex(args, 5) integerValue];
+        [api printTag:arg_tag level:arg_level message:arg_message fileName:arg_fileName funcName:arg_funcName lineNumber:arg_lineNumber completion:^(FlutterError *_Nullable error) {
           callback(wrapResult(nil, error));
         }];
       }];

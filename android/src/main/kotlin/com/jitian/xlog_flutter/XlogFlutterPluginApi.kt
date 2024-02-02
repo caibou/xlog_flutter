@@ -72,7 +72,7 @@ enum class XlogMode(val raw: Int) {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface XlogFlutterApi {
   fun init(mode: XlogMode, logFileName: String, logMaxSize: Long, callback: (Result<Unit>) -> Unit)
-  fun print(tag: String, level: LogLevel, message: String, callback: (Result<Unit>) -> Unit)
+  fun print(tag: String, level: LogLevel, message: String, fileName: String, funcName: String, lineNumber: Long, callback: (Result<Unit>) -> Unit)
   fun getLogFolderPath(callback: (Result<String>) -> Unit)
   fun getLogFilePath(callback: (Result<String>) -> Unit)
   fun flush(callback: (Result<Unit>) -> Unit)
@@ -114,7 +114,10 @@ interface XlogFlutterApi {
             val tagArg = args[0] as String
             val levelArg = LogLevel.ofRaw(args[1] as Int)!!
             val messageArg = args[2] as String
-            api.print(tagArg, levelArg, messageArg) { result: Result<Unit> ->
+            val fileNameArg = args[3] as String
+            val funcNameArg = args[4] as String
+            val lineNumberArg = args[5].let { if (it is Int) it.toLong() else it as Long }
+            api.print(tagArg, levelArg, messageArg, fileNameArg, funcNameArg, lineNumberArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))

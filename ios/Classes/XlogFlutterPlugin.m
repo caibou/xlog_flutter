@@ -5,6 +5,6 @@
 @implementation XlogFlutterPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     XlogFlutterImpl *xlogImpl = [[XlogFlutterImpl alloc] init];
-    XlogFlutterApiSetup(registrar.messenger, xlogImpl);
+    SetUpXlogFlutterApi(registrar.messenger, xlogImpl);
 }
 @end

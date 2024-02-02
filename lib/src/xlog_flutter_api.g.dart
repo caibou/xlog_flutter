@@ -62,7 +62,7 @@ class XlogFlutterApi {
     }
   }
 
-  Future<void> print({required String tag, required LogLevel level, required String message,}) async {
+  Future<void> print({required String tag, required LogLevel level, required String message, required String fileName, required String funcName, required int lineNumber,}) async {
     const String __pigeon_channelName = 'dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.print';
     final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
       __pigeon_channelName,
@@ -70,7 +70,7 @@ class XlogFlutterApi {
       binaryMessenger: __pigeon_binaryMessenger,
     );
     final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[tag, level.index, message]) as List<Object?>?;
+        await __pigeon_channel.send(<Object?>[tag, level.index, message, fileName, funcName, lineNumber]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {

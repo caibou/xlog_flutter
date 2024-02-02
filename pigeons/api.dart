@@ -21,12 +21,17 @@ abstract class XlogFlutterApi {
 
   @async
   void print(
-      {required String tag, required LogLevel level, required String message});
+      {required String tag,
+      required LogLevel level,
+      required String message,
+      required String fileName,
+      required String funcName,
+      required int lineNumber});
 
   @async
   String getLogFolderPath();
 
-  @async 
+  @async
   String getLogFilePath();
 
   @async
