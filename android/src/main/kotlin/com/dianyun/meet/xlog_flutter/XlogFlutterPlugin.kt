@@ -1,8 +1,8 @@
-package com.jitian.meet.xlog_flutter
+package com.dianyun.meet.xlog_flutter
 
 import XlogFlutterApi
 import androidx.annotation.NonNull
-import com.jitian.xlog_flutter.XlogFlutterApiImpl
+import com.dianyun.xlog_flutter.XlogFlutterApiImpl
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 /** XlogFlutterPlugin */

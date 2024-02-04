@@ -36,7 +36,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.jitian.meet.xlog_flutter
+        package: com.dianyun.meet.xlog_flutter
         pluginClass: XlogFlutterPlugin
       ios:
         pluginClass: XlogFlutterPlugin

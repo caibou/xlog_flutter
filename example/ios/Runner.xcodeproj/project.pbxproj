@@ -307,7 +307,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jitian.meet.xlogFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dianyun.meet.xlogFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -431,7 +431,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jitian.meet.xlogFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dianyun.meet.xlogFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -450,7 +450,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jitian.meet.xlogFlutterExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dianyun.meet.xlogFlutterExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -1,4 +1,4 @@
-group 'com.jitian.meet.xlog_flutter'
+group 'com.dianyun.meet.xlog_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {

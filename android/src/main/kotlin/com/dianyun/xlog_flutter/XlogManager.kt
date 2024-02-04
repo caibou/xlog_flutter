@@ -1,4 +1,4 @@
-package com.jitian.xlog_flutter
+package com.dianyun.xlog_flutter
 
 import XlogMode
 import android.content.Context

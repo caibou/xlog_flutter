@@ -3,7 +3,7 @@ import 'package:pigeon/pigeon.dart';
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/xlog_flutter_api.g.dart',
   kotlinOut:
-      'android/src/main/kotlin/com/jitian/xlog_flutter/XlogFlutterPluginApi.kt',
+      'android/src/main/kotlin/com/dianyun/xlog_flutter/XlogFlutterPluginApi.kt',
   objcSourceOut: 'ios/Classes/XlogFlutterPluginApi.g.m',
   objcHeaderOut: 'ios/Classes/XlogflutterPluginApi.g.h',
 ))

@@ -1,4 +1,4 @@
-package com.jitian.meet.xlog_flutter_example
+package com.dianyun.meet.xlog_flutter_example
 
 import io.flutter.embedding.android.FlutterActivity
 

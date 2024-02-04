@@ -1,4 +1,4 @@
-package com.jitian.xlog_flutter
+package com.dianyun.xlog_flutter
 
 object XlogVarDefine {
     const val logParentFolder = "mars-xlog"
