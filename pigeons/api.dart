@@ -28,11 +28,7 @@ abstract class XlogFlutterApi {
       required String funcName,
       required int lineNumber});
 
-  @async
-  String getLogFolderPath();
 
-  @async
-  String getLogFilePath();
 
   @async
   void flush();

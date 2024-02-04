@@ -44,8 +44,6 @@ NSObject<FlutterMessageCodec> *XlogFlutterApiGetCodec(void);
 @protocol XlogFlutterApi
 - (void)initMode:(XlogMode)mode logFileName:(NSString *)logFileName logMaxSize:(NSInteger)logMaxSize completion:(void (^)(FlutterError *_Nullable))completion;
 - (void)printTag:(NSString *)tag level:(LogLevel)level message:(NSString *)message fileName:(NSString *)fileName funcName:(NSString *)funcName lineNumber:(NSInteger)lineNumber completion:(void (^)(FlutterError *_Nullable))completion;
-- (void)getLogFolderPathWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
-- (void)getLogFilePathWithCompletion:(void (^)(NSString *_Nullable, FlutterError *_Nullable))completion;
 - (void)flushWithCompletion:(void (^)(FlutterError *_Nullable))completion;
 @end
 

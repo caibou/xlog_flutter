@@ -17,8 +17,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int number = 0;
-  var logFolderPath = "";
-  var logFilePath = "";
 
   @override
   void initState() {
@@ -48,8 +46,6 @@ class _MyAppState extends State<MyApp> {
           body: Center(
               child: Column(children: [
             Text("current Number : $number"),
-            Text("current logFolderPath : $logFolderPath"),
-            Text("current logFilePath : $logFilePath"),
             ElevatedButton(
                 onPressed: () {
                   number += 1;
@@ -62,22 +58,6 @@ class _MyAppState extends State<MyApp> {
                   XlogFlutter.flush();
                 },
                 child: const Text("flush Log")),
-            ElevatedButton(
-                onPressed: () {
-                  XlogFlutter.getLogFolderPath().then((result) {
-                    logFolderPath = result;
-                    setState(() {});
-                  });
-                },
-                child: const Text("getLogFilePath")),
-            ElevatedButton(
-                onPressed: () {
-                  XlogFlutter.getLogFilePath().then((result) {
-                    logFilePath = result;
-                    setState(() {});
-                  });
-                },
-                child: const Text("getLogFilePath")),
           ]))),
     );
   }

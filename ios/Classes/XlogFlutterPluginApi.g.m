@@ -102,40 +102,6 @@ void SetUpXlogFlutterApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<Xl
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.getLogFolderPath"
-        binaryMessenger:binaryMessenger
-        codec:XlogFlutterApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(getLogFolderPathWithCompletion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(getLogFolderPathWithCompletion:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api getLogFolderPathWithCompletion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.getLogFilePath"
-        binaryMessenger:binaryMessenger
-        codec:XlogFlutterApiGetCodec()];
-    if (api) {
-      NSCAssert([api respondsToSelector:@selector(getLogFilePathWithCompletion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(getLogFilePathWithCompletion:)", api);
-      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
-        [api getLogFilePathWithCompletion:^(NSString *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
-      }];
-    } else {
-      [channel setMessageHandler:nil];
-    }
-  }
-  {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
         initWithName:@"dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.flush"
         binaryMessenger:binaryMessenger
         codec:XlogFlutterApiGetCodec()];

@@ -73,8 +73,6 @@ enum class XlogMode(val raw: Int) {
 interface XlogFlutterApi {
   fun init(mode: XlogMode, logFileName: String, logMaxSize: Long, callback: (Result<Unit>) -> Unit)
   fun print(tag: String, level: LogLevel, message: String, fileName: String, funcName: String, lineNumber: Long, callback: (Result<Unit>) -> Unit)
-  fun getLogFolderPath(callback: (Result<String>) -> Unit)
-  fun getLogFilePath(callback: (Result<String>) -> Unit)
   fun flush(callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -123,42 +121,6 @@ interface XlogFlutterApi {
                 reply.reply(wrapError(error))
               } else {
                 reply.reply(wrapResult(null))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.getLogFolderPath", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getLogFolderPath() { result: Result<String> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(wrapResult(data))
-              }
-            }
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.getLogFilePath", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            api.getLogFilePath() { result: Result<String> ->
-              val error = result.exceptionOrNull()
-              if (error != null) {
-                reply.reply(wrapError(error))
-              } else {
-                val data = result.getOrNull()
-                reply.reply(wrapResult(data))
               }
             }
           }

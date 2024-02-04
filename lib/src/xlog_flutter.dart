@@ -47,9 +47,5 @@ class XlogFlutter {
         lineNumber: lineNumber);
   }
 
-  static Future<String> getLogFilePath() => api.getLogFilePath();
-
-  static Future<String> getLogFolderPath() => api.getLogFolderPath();
-
   static Future flush() => api.flush();
 }

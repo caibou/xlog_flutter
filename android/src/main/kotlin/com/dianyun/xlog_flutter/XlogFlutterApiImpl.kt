@@ -61,24 +61,6 @@ class XlogFlutterApiImpl constructor(
 
     }
 
-
-    override fun getLogFolderPath(callback: (Result<String>) -> Unit) {
-        callback(Result.success(XlogManager.getInstance().fetchLogStorageFolder(mContext)))
-    }
-
-
-    override fun getLogFilePath(callback: (Result<String>) -> Unit) {
-        val logFolder = XlogManager.getInstance().fetchLogStorageFolder(mContext)
-        val folder = File(logFolder)
-        if (!folder.exists()) {
-            return callback(Result.success(""))
-        }
-        val files = folder.listFiles()
-        Arrays.sort(files, LastModifiedComparator())
-        val filePath = folder.listFiles()?.maxByOrNull { it.lastModified() }
-        callback(Result.success(filePath?.absolutePath ?: ""))
-    }
-
     override fun flush(callback: (Result<Unit>) -> Unit) {
         XlogManager.getInstance().getXLog().appenderFlush(0, true)
         callback(Result.success(Unit))
