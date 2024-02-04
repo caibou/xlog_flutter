@@ -14,10 +14,16 @@ enum XlogMode { debug, release }
 @HostApi()
 abstract class XlogFlutterApi {
   @async
-  void init(
-      {required XlogMode mode,
-      required String logFileName,
-      required int logMaxSize});
+  void init({
+    required XlogMode mode,
+    required String logFileName,
+    required int logMaxSize,
+    required String logDir,
+    required String cacheDir,
+    int cacheDay = 0,
+  });
+
+
 
   @async
   void print(
@@ -27,7 +33,6 @@ abstract class XlogFlutterApi {
       required String fileName,
       required String funcName,
       required int lineNumber});
-
 
 
   @async

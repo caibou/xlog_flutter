@@ -40,7 +40,7 @@ class XlogFlutterApi {
 
   static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
 
-  Future<void> init({required XlogMode mode, required String logFileName, required int logMaxSize,}) async {
+  Future<void> init({required XlogMode mode, required String logFileName, required int logMaxSize, required String logDir, required String cacheDir, int cacheDay = 0,}) async {
     const String __pigeon_channelName = 'dev.flutter.pigeon.xlog_flutter.XlogFlutterApi.init';
     final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
       __pigeon_channelName,
@@ -48,7 +48,7 @@ class XlogFlutterApi {
       binaryMessenger: __pigeon_binaryMessenger,
     );
     final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[mode.index, logFileName, logMaxSize]) as List<Object?>?;
+        await __pigeon_channel.send(<Object?>[mode.index, logFileName, logMaxSize, logDir, cacheDir, cacheDay]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {

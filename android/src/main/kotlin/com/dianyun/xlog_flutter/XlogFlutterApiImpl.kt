@@ -10,9 +10,7 @@ import com.tencent.mars.xlog.Xlog
 import java.io.File
 import java.util.Arrays
 
-class XlogFlutterApiImpl constructor(
-    private val mContext: Context
-) : XlogFlutterApi {
+class XlogFlutterApiImpl : XlogFlutterApi {
 
     init {
         XlogManager.getInstance().loadXLogLib();
@@ -20,9 +18,16 @@ class XlogFlutterApiImpl constructor(
 
 
     override fun init(
-        mode: XlogMode, logFileName: String, logMaxSize: Long, callback: (Result<Unit>) -> Unit
+        mode: XlogMode,
+        logFileName: String,
+        logMaxSize: Long,
+        logDir: String,
+        cacheDir: String,
+        cacheDay: Long,
+        callback: (Result<Unit>) -> Unit
     ) {
-        XlogManager.getInstance().initXLog(mContext, mode, logFileName, logMaxSize, callback)
+        XlogManager.getInstance()
+            .initXLog(mode, logFileName, logMaxSize, logDir, cacheDir, cacheDay.toInt(), callback)
     }
 
     override fun print(

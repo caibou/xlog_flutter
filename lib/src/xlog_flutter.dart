@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'xlog_flutter_api.g.dart';
 import 'package:stack_trace/stack_trace.dart';
 
@@ -9,11 +8,19 @@ class XlogFlutter {
   static const int _kMaxXLogFileSize = 1024 * 1024 * 1;
   static const bool deBugMode = false;
 
-  static Future init(
-          {XlogMode mode = XlogMode.debug,
-          String fileName = 'xlogFlutter',
-          int maxLogFileSize = _kMaxXLogFileSize}) =>
-      api.init(mode: mode, logFileName: fileName, logMaxSize: maxLogFileSize);
+  static Future init({
+    required String logDir,
+    required String cacheDir,
+    XlogMode mode = XlogMode.debug,
+    String fileName = 'xlogFlutter',
+    int maxLogFileSize = _kMaxXLogFileSize,
+  }) =>
+      api.init(
+          mode: mode,
+          logFileName: fileName,
+          logMaxSize: maxLogFileSize,
+          logDir: logDir,
+          cacheDir: cacheDir);
 
   static Future print(
       {String tag = '',

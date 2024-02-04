@@ -25,19 +25,19 @@ class XlogManager private constructor() {
     }
 
     fun initXLog(
-        context: Context,
         mode: XlogMode,
         logFileName: String,
         logMaxSize: Long,
+        logDir: String,
+        cacheDir: String,
+        cacheDay: Int,
         callback: (Result<Unit>) -> Unit
     ) {
-        val logFolder = fetchLogParentFolder(context)
-        val logPath = "${logFolder}/${XlogVarDefine.xLogFolderName}"
-        val cachePath = "${logFolder}/${XlogVarDefine.cacheLogFolderName}"
+
         mXLog = Xlog().apply {
             appenderOpen(
                 if (mode == XlogMode.DEBUG) Xlog.LEVEL_DEBUG else Xlog.LEVEL_INFO,
-                Xlog.AppednerModeAsync, cachePath, logPath, logFileName, 0
+                Xlog.AppednerModeAsync, cacheDir, logDir, logFileName, cacheDay
             )
             setMaxFileSize(0, logMaxSize)
             setConsoleLogOpen(0, mode == XlogMode.DEBUG)
@@ -52,21 +52,5 @@ class XlogManager private constructor() {
     } else {
         throw IllegalStateException("Xlog has not been initialized yet.")
     }
-
-    private fun fetchLogParentFolder(context: Context): String {
-        return createIfNotExists(context.filesDir.absolutePath, XlogVarDefine.logParentFolder)
-    }
-
-    fun fetchLogStorageFolder(context: Context): String {
-        return createIfNotExists(
-            fetchLogParentFolder(context), XlogVarDefine.xLogFolderName
-        )
-    }
-
-    private fun createIfNotExists(parent: String, folderName: String): String {
-        val marsXLogDir = File(parent, folderName)
-        return marsXLogDir.apply { if (!exists()) mkdirs() }.absolutePath
-    }
-
 
 }

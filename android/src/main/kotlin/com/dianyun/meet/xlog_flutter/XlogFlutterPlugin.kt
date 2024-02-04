@@ -8,8 +8,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 /** XlogFlutterPlugin */
 class XlogFlutterPlugin : FlutterPlugin {
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        val mContext = flutterPluginBinding.applicationContext
-        XlogFlutterApi.setUp(flutterPluginBinding.binaryMessenger, XlogFlutterApiImpl(mContext))
+        XlogFlutterApi.setUp(flutterPluginBinding.binaryMessenger, XlogFlutterApiImpl())
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

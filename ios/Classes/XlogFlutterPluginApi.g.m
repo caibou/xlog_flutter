@@ -61,13 +61,16 @@ void SetUpXlogFlutterApi(id<FlutterBinaryMessenger> binaryMessenger, NSObject<Xl
         binaryMessenger:binaryMessenger
         codec:XlogFlutterApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(initMode:logFileName:logMaxSize:completion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(initMode:logFileName:logMaxSize:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(initMode:logFileName:logMaxSize:logDir:cacheDir:cacheDay:completion:)], @"XlogFlutterApi api (%@) doesn't respond to @selector(initMode:logFileName:logMaxSize:logDir:cacheDir:cacheDay:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         XlogMode arg_mode = [GetNullableObjectAtIndex(args, 0) integerValue];
         NSString *arg_logFileName = GetNullableObjectAtIndex(args, 1);
         NSInteger arg_logMaxSize = [GetNullableObjectAtIndex(args, 2) integerValue];
-        [api initMode:arg_mode logFileName:arg_logFileName logMaxSize:arg_logMaxSize completion:^(FlutterError *_Nullable error) {
+        NSString *arg_logDir = GetNullableObjectAtIndex(args, 3);
+        NSString *arg_cacheDir = GetNullableObjectAtIndex(args, 4);
+        NSInteger arg_cacheDay = [GetNullableObjectAtIndex(args, 5) integerValue];
+        [api initMode:arg_mode logFileName:arg_logFileName logMaxSize:arg_logMaxSize logDir:arg_logDir cacheDir:arg_cacheDir cacheDay:arg_cacheDay completion:^(FlutterError *_Nullable error) {
           callback(wrapResult(nil, error));
         }];
       }];
