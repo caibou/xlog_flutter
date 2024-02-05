@@ -13,6 +13,8 @@ using namespace mars::xlog;
 
 @interface XlogFlutterImpl()
 
+@property (nonatomic, strong) NSString *logDir;
+
 @end
 
 @implementation XlogFlutterImpl
@@ -24,22 +26,22 @@ using namespace mars::xlog;
     }
 }
 
-- (void)getLogFilePathWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
-    if (completion) {
-        completion([[self class] lastLogFilePathName], nil);
-    }
-}
-
-- (void)getLogFolderPathWithCompletion:(nonnull void (^)(NSString * _Nullable, FlutterError * _Nullable))completion {
-    if(completion) {
-        completion([[self class] logFolderPath], nil);
-    }
-}
-
-- (void)initMode:(XlogMode)mode
+- (void)initMode:(XlogMode)mode 
      logFileName:(nonnull NSString *)logFileName
       logMaxSize:(NSInteger)logMaxSize
+          logDir:(nonnull NSString *)logDir
+        cacheDir:(nonnull NSString *)cacheDir
+        cacheDay:(NSInteger)cacheDay
       completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    
+    if (!logDir || logDir.length <= 0) {
+        if (completion) {
+            completion([FlutterError errorWithCode:@"-1" message:@"the logDir can't be empty" details:nil]);
+        }
+        return;
+    }
+    
+    self.logDir = logDir.copy;
     
     switch (mode) {
         case XlogModeDebug:
@@ -56,13 +58,13 @@ using namespace mars::xlog;
     
     XLogConfig config;
     config.mode_ = kAppenderAsync;
-    config.logdir_ = [[[self class] logFolderPath] UTF8String];
+    config.logdir_ = [logDir UTF8String];
     config.nameprefix_ = [logFileName UTF8String];
     config.pub_key_ = "";
     config.compress_mode_ = kZlib;
     config.compress_level_ = 0;
-    config.cachedir_ = "";
-    config.cache_days_ = 0;
+    config.cachedir_ = [cacheDir UTF8String];
+    config.cache_days_ = (int)cacheDay;
     appender_open(config);
     
     if(completion) {
@@ -70,7 +72,7 @@ using namespace mars::xlog;
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-         [[self class] cleanLogFiles];
+         [self cleanLogFiles];
      });
 }
 
@@ -136,81 +138,6 @@ using namespace mars::xlog;
     xlogger_Write(&info, message.UTF8String);
 }
 
-+ (NSString *)lastLogFilePathName {
-    return [[self class] logFilePathListByReverse].lastObject;
-}
-
-+ (NSArray *)logFilePathListByReverse {
-    NSString *logFolderPath = [[self class] logFolderPath];
-    NSError *error = nil;
-    NSArray *logFileList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logFolderPath 
-                                                                               error:&error];
-    if (logFileList == nil || [logFileList count] == 0){
-        return nil;
-    }
-    NSMutableArray *tmpLogFileList = [NSMutableArray new];
-    [logFileList enumerateObjectsUsingBlock:^(NSString * logFilePath, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([[logFilePath pathExtension] isEqualToString:@"xlog"]) {
-            [tmpLogFileList addObject:[logFolderPath stringByAppendingPathComponent:logFilePath]];
-        }
-    }];
-    
-    return [[tmpLogFileList sortedArrayUsingComparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-        
-        NSDictionary *firstProperties = [[NSFileManager defaultManager] attributesOfItemAtPath:obj1
-                                                                                         error:nil];
-        NSDate *firstDate = [firstProperties objectForKey:NSFileModificationDate];
-        NSDictionary *secondProperties = [[NSFileManager defaultManager] attributesOfItemAtPath:obj2 
-                                                                                          error:nil];
-        NSDate *secondDate = [secondProperties objectForKey:NSFileModificationDate];
-        return [secondDate compare:firstDate];
-    }] copy];
-}
-
-+ (NSString *)logFolderPath {
-    NSString *path = [[self class] getLogPath];
-    [[NSFileManager defaultManager] createDirectoryAtPath:path 
-                              withIntermediateDirectories:YES
-                                               attributes:nil
-                                                    error:nil];
-    return path;
-}
-
-+ (NSString *)getLogDirectory {
-    NSString *logParentPath = nil;
-    
-    do {
-        NSArray *directories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        if ([directories count] < 1)
-            break;
-        
-        logParentPath = [directories objectAtIndex:0];
-        
-        NSUInteger length = [logParentPath length];
-        
-        if (length < 1) {
-            break;
-        }
-        
-        if ('/' == [logParentPath characterAtIndex:length - 1])
-            break;
-        
-        logParentPath = [logParentPath stringByAppendingString:@"/"];
-        
-    } while (false);
-    
-    return logParentPath;
-}
-
-+ (NSString *)getLogPath {
-    static NSString * kLogDir = @"logs/";
-    NSString *cacheDir = [[self class] getLogDirectory];
-    if (cacheDir == nil){
-        return nil;
-    }
-    return [cacheDir stringByAppendingPathComponent:kLogDir];
-}
-
 + (NSString *)getTagDescByLogLevel:(LogLevel)level {
     static NSDictionary<NSNumber *,NSString *> *levelDescDict = @{
         @(LogLevelNone)      : @"NONE",
@@ -224,12 +151,15 @@ using namespace mars::xlog;
     return ([levelDescDict objectForKey:@(level)] ? : @"UNKNOWN");
 }
 
-+ (void)cleanLogFiles {
+- (void)cleanLogFiles {
     NSError *error= nil;
-    NSString *logFolder = [[self class] logFolderPath];
-    NSArray *logFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logFolder 
-                                                                            error:&error];
     
+    if (!self.logDir || self.logDir.length <= 0) {
+        return;
+    }
+    
+    NSArray *logFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.logDir
+                                                                            error:&error];
     if (logFiles == nil || [logFiles count] == 0) {
         NSLog(@"Error happened when clearnLogFiles:%@", error);
         return;
@@ -242,12 +172,10 @@ using namespace mars::xlog;
 #endif
     
     for (NSString *logFile in logFiles) {
-        NSString *logFilePath = [logFolder stringByAppendingPathComponent:logFile];
+        NSString *logFilePath = [self.logDir stringByAppendingPathComponent:logFile];
         if ([[logFilePath pathExtension] isEqualToString:@"xlog"]) {
-
-            NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:logFilePath 
+            NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:logFilePath
                 error:&error];
-
             if (fileAttr) {
                 NSDate *creationDate = [fileAttr valueForKey:NSFileCreationDate];
                 if ([creationDate compare:date] == NSOrderedAscending) {
