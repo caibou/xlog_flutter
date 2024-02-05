@@ -1,10 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:xlog_flutter/export.dart';
 import 'dart:async';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  XlogFlutter.init(mode: XlogMode.debug, fileName: 'meet');
+  final Directory appDocumentsDir = await getApplicationSupportDirectory();
+  final parentDir = "${appDocumentsDir.path}/mars_xlog";
+  final logDir = "$parentDir/xlog";
+  final cacheDir = "$parentDir/cacheDir";
+  if (!Directory(parentDir).existsSync()) {
+    await Directory(parentDir).create(recursive: true);
+  }
+  XlogFlutter.init(
+      mode: XlogMode.debug,
+      fileName: 'meet',
+      logDir: logDir,
+      cacheDir: cacheDir);
   runApp(const MyApp());
 }
 
