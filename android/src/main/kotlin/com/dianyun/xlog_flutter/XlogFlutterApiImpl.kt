@@ -3,12 +3,9 @@ package com.dianyun.xlog_flutter
 import LogLevel
 import XlogFlutterApi
 import XlogMode
-import android.content.Context
 import android.os.Looper
 import android.os.Process
 import com.tencent.mars.xlog.Xlog
-import java.io.File
-import java.util.Arrays
 
 class XlogFlutterApiImpl : XlogFlutterApi {
 

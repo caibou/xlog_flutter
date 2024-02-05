@@ -1,10 +1,8 @@
 package com.dianyun.xlog_flutter
 
 import XlogMode
-import android.content.Context
 import com.tencent.mars.xlog.Log
 import com.tencent.mars.xlog.Xlog
-import java.io.File
 
 class XlogManager private constructor() {
     companion object {
