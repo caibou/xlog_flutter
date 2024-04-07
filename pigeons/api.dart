@@ -2,10 +2,12 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/xlog_flutter_api.g.dart',
+  kotlinOptions: KotlinOptions(errorClassName: "XlogFlutterError"),
   kotlinOut:
       'android/src/main/kotlin/com/dianyun/xlog_flutter/XlogFlutterPluginApi.kt',
   objcSourceOut: 'ios/Classes/XlogFlutterPluginApi.g.m',
   objcHeaderOut: 'ios/Classes/XlogflutterPluginApi.g.h',
+
 ))
 enum LogLevel { none, fatal, error, warning, info, debug, verbose }
 
